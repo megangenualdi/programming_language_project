@@ -13,8 +13,9 @@
 7. Where will you get information about this language when it's time to start programming in it? At the end of your assignment, provide a list of the names of books, website URLs, or any other resources that relate to your language in particular.
    
      I will use the main Go documentation, stackoverflow, and my teammates as resources.
-     https://go.dev/doc/
-     https://stackoverflow.com
+   
+     - https://go.dev/doc/
+     - https://stackoverflow.com
 
 -------
 
