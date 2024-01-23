@@ -1,13 +1,15 @@
 1. What is the name of your language?
+   
   Go
 
-2. When/where was it created, and by whom? Was it written to address a particular problem or need?
+3. When/where was it created, and by whom? Was it written to address a particular problem or need?
+   
   It was developed in 2007 by Robert Griesemer, Rob Pike, and Ken Thompson and later released as an open-source language. Two key features is it's ability to run multiple tasks at the same time and automatically managing memory(garbage collection).
 
-3. What types of programming is your language primarily used for (ex: web sites, videogames, mobile devices, parsing, etc.). If your language is multi-purpose, provide some examples of different projects it's been used for.
+5. What types of programming is your language primarily used for (ex: web sites, videogames, mobile devices, parsing, etc.). If your language is multi-purpose, provide some examples of different projects it's been used for.
   Some of Go's most popular use cases are Cloud and Network services, command-line interfaces, web interfaces, development operations, and site reliability engineering
 
-4. Where will you get information about this language when it's time to start programming in it? At the end of your assignment, provide a list of the names of books, website URLs, or any other resources that relate to your language in particular.
+6. Where will you get information about this language when it's time to start programming in it? At the end of your assignment, provide a list of the names of books, website URLs, or any other resources that relate to your language in particular.
   I will use the main Go documentation, stackoverflow, and my teammates as resources.
   https://go.dev/doc/
   https://stackoverflow.com
