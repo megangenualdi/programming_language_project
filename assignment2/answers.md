@@ -35,8 +35,7 @@ do? If it doesn't compile, why? Is there something you can do to make it compile
 	    num,_ := strconv.Atoi("5")
 	    var x = num + 6
 	    fmt.Println(x)
-      }
-    ```
+    }
 
 5. Describe the limitations (or lack thereof) of your programming language as they relate to the coding portion of the assignment (adding ints and floats, storing different types in lists, converting between data types). Are there other restrictions or pitfalls that the documentation mentions that you need to be aware of?
 
