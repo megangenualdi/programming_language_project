@@ -37,6 +37,8 @@ do? If it doesn't compile, why? Is there something you can do to make it compile
 	    fmt.Println(x)
     }
 
+  https://www.techtarget.com/searchitoperations/tip/What-Golang-generics-support-means-for-code-structure#:~:text=For%20the%20most%20part%2C%20Go,implicitly%2C%20without%20any%20implements%20keyword.
+
 5. Describe the limitations (or lack thereof) of your programming language as they relate to the coding portion of the assignment (adding ints and floats, storing different types in lists, converting between data types). Are there other restrictions or pitfalls that the documentation mentions that you need to be aware of?
 
 
