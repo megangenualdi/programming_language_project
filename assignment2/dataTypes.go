@@ -1,9 +1,3 @@
-// • int
-// • string
-// • floating-point number
-// • boolean
-// • array/list
-// • dictionary (sometimes called a hash or a map, depending on your language)
 package main
 
 import (
