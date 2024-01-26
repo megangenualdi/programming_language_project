@@ -16,6 +16,8 @@
    
      - https://go.dev/doc/
      - https://stackoverflow.com
+     - https://golang.cafe
+     - https://medium.com
 
 -------
 
