@@ -1,7 +1,9 @@
 1. What are the naming requirements for variables in your language?
   a. What about naming conventions? Are they enforced by the compiler/interpreter, or are they just standards in the community?
 
-  Variables are camelcase and start with a lowercase letter unless they are being exported. Something that Go will enforce when it comes to variable names, is that they have to start with a letter, whether it's upper or lowercase. It will allow numbers in the variable name, they just cannot be at the first character. Special characters (with an exception of underscores) are not allowed in variable names. The naming conventions in Go are not enforced by the complier but are best practices that are generally followed in the community.
+  Variables are camelcase and start with a lowercase letter unless they are being exported. These naming conventions in Go are not enforced by the complier but are best practices that are generally followed in the community. 
+  
+  Something that Go will enforce when it comes to variable names, is that they have to start with a letter, whether it's upper or lowercase. It will allow numbers in the variable name, they just cannot be at the first character. Special characters (with an exception of underscores) are not allowed in variable names.
 
   https://www.mohitkhare.com/blog/go-naming-conventions/
 
