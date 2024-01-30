@@ -20,7 +20,7 @@ func main() {
 	fmt.Printf("%s\n%d\n%f\n", str, num, floatNum)
 	// 	This is a string
 	// 34
-	// 100.995000true
+	// 100.995000
 	fmt.Println(boolVar)
 	// true
 	fmt.Println(arrList)
