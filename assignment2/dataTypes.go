@@ -18,7 +18,7 @@ func main() {
 	}
 	// Arrays and Maps can contain only one datatype
 	fmt.Printf("%s\n%d\n%f\n", str, num, floatNum)
-	// 	This is a string
+	// This is a string
 	// 34
 	// 100.995000
 	fmt.Println(boolVar)
