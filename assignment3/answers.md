@@ -5,13 +5,19 @@
 3. What types of conditional statements are available in your language? (if/else, if/then/else, if/elseif/else). Does your language allow for statements other than “if” (for example, Perl has  an “unless” statement, which does the opposite of “if”!)? What operators are used to act on booleans?
 
 Conditionals:
+
     - `if`/`else`/`else if`
+
     - `:=`/`switch` and `case`
   
   Logical operators used to act on booleans:
+  
     - `&&` and operator
+    
     - `||` or operator
+    
     - `!` not operator
+    
 
   https://www.codecademy.com/learn/learn-go/modules/learn-go-conditionals/cheatsheet
 
