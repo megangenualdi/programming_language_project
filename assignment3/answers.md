@@ -25,7 +25,8 @@
   https://www.digitalocean.com/community/tutorials/how-to-write-switch-statements-in-go
 
 5. Lastly, and perhaps most importantly: it is time to start thinking about what your programming project is going to actually be. In future sessions we will be breaking down your project into individual milestones for weekly check-ins. But for now, just write a short paragraph about what it is you are planning to code in your language of choice. Remember that it should be a substantial program - a game, app, calendar, web site, etc. (I'll try to dig up some examples to share before next class)
-  I am planning on designing a journal web app. This web app will have the following:
+
+I am planning on designing a journal web app. This web app will have the following:
   - Allow users to create accounts
   - Different 'pages' for your journal that are set up like grids with 12 columns for each month and 31 rows for days
     - Each page will track a different aspect of daily life:
