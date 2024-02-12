@@ -77,3 +77,5 @@ References:
 - https://www.geeksforgeeks.org/how-to-split-a-string-in-golang/
 
 - https://david-yappeter.medium.com/golang-pass-by-value-vs-pass-by-reference-e48aac8b2716
+
+- https://golangbot.com/structs-instead-of-classes/
