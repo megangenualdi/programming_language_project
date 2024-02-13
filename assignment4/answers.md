@@ -35,7 +35,7 @@ Yes functions can except multiple parameters and they can be different data type
 
 ### 6. Can functions in your language return multiple values at the same time? How is that implemented? If not, are there ways around that problem? What are they?
 
-Yes functions can return multiple values at the same time. These functions are implemented the same way as stated above, with the difference being when you are declaring the return value type, you use parenthesises and provide the comma separated valuess for each value type.
+Yes functions can return multiple values at the same time. These functions are implemented the same way as stated above, with the difference being when you are declaring the return value type, you use parenthesises and provide the comma separated values for each value type.
 
 Example
 ```
