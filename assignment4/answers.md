@@ -79,8 +79,9 @@ Another characteristic to be mindful of is that function argmuents cannot be set
 Example
 ```
 func someFunction(needsDefault string) {
-if needsDefault == "" (
-   needsDefault = "This is my default value"
+   if needsDefault == "" {
+       needsDefault = "This is my default value"
+   }
 }
 ```
 ***
