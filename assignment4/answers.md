@@ -74,6 +74,15 @@ Example
 ```
 randomFunction(&argOne)
 ```
+
+Another characteristic to be mindful of is that function argmuents cannot be set to a default value like in other languages, like Python. There are workarounds for this, like immediately checking the argument to see if it is null and then assigning it to your default value.
+Example
+```
+func someFunction(needsDefault string) {
+if needsDefault == "" (
+   needsDefault = "This is my default value"
+}
+```
 ***
 
 References:
@@ -87,3 +96,5 @@ References:
 - https://david-yappeter.medium.com/golang-pass-by-value-vs-pass-by-reference-e48aac8b2716
 
 - https://golangbot.com/structs-instead-of-classes/
+
+- https://stackoverflow.com/questions/19612449/default-value-in-gos-method
