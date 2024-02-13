@@ -53,7 +53,7 @@ Golang is able to support pass-by reference and pass-by value. I have gone more 
 
 ### 8. Are there any other aspects of functions in your language that aren't specifically asked about here, but that are important to know in order to write one? What are they?
 
-One important asterik has to do with declaring function arguments and their variable types. There are two ways to declare argument types and they will perform differently as a result.
+One important aspect has to do with declaring function arguments and their variable types. There are two ways to declare argument types and they will perform differently as a result.
 
 Option 1 (Pass by value)
 ```
