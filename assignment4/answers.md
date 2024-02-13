@@ -66,7 +66,7 @@ The above function'sa argument means that argOne's variable type is the pretend 
 Option2 (Pass by reference)
 ```
 func randomFunction(argOne *Random) {
-	return "This is a function who's argument type POINTED at 'Random'"
+	return "This is a function who's argument type is POINTED at 'Random'"
 }
 ```
 When are argument type has an asterik in front of it, it means that the argument is pointed at that class type (in our example this is Random) and if argOne is manipulated in any way within our randomFunction then those changes will persist outside of the function. Also, when randomFunction is invoked and is pass by reference the argument being passed to it needs to be precided by an `&`
