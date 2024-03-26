@@ -3,8 +3,9 @@ package main
 import (
 	"html/template"
 	"net/http"
+	"net/url"
 	"os"
-	// "project/structs"
+	"project/structs"
 )
 
 var mainView = template.Must(template.ParseFiles("templates/index.html"))
@@ -19,15 +20,23 @@ func habitViewHandler(w http.ResponseWriter, r *http.Request) {
 	gridView.Execute(w, nil)
 }
 
+func loginViewHandler(w http.ResponseWriter, r *http.Request){
+	params,_ := url.ParseQuery(r.URL.RawQuery)
+	username := params.Get("username")
+	password := params.Get("password")
+	structs.CreateUser(username, password)
+}
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "3000"
 	}
 
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", indexHandler)
 	mux.HandleFunc("/habit/", habitViewHandler)
+	mux.HandleFunc("/login/", loginViewHandler)
 	http.ListenAndServe(":"+port, mux)
-	// structs.CreateUser("bgenualdi", "alsotesting")
 }
