@@ -1,24 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height: 100%;">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Final project</title>
-    <link href="/style.css" rel="stylesheet">
-    <style>
-      html, body {
-      height: 100%;  
-    background-image: linear-gradient(rgb(248, 222, 179), rgb(138, 228, 198));
-    }
-    </style>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel='stylesheet' href="style.css">
+    <script>
+      (function(document, window, undefined) {
+        window.index = function() {
+        return {
+          username: '',
+          password: '',
+
+          init() {
+            var params = new URL(window.location).searchParams;
+            this.username = params.get('username') || "";
+          },
+
+          logIn(e) {
+            console.log(e)
+            console.log(this.username)
+            fetch(`http://localhost:3000/login/?username=${this.username}&password=${this.password}`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({'username': this.username, 'password': this.password})
+            })
+            .then((response) => window.location.replace("http://localhost:3000/habit/"))
+            .catch((error) => console.error("Error:", error));
+          },
+  
+        };
+      };
+      })(document, window);
+    </script>
   </head>
-  <body>
-    <main>
-      <div>
-        <p class="text-3xl font-bold underline">testing</p>
-        <form>
-          <input/>
+  <body style="height: 100%;background-image: linear-gradient(rgb(248, 222, 179), rgb(138, 228, 198));">
+    <main x-data="index()">
+      <div style="display: inline-flex;flex-direction: column;justify-content: center;min-height: 100vh;;align-items: center;width: 100%;">
+        <div style="font-weight: 700;  font-size: 1.5rem;line-height: 2rem;color: rgb(59, 97, 99);">
+          Hello, please log in
+        </div>
+        <form style="display: inline-flex;flex-direction: column;justify-content: center;">
+          <input type="text" placeholder="Username" x-model="username"
+                 style="margin: 1rem;padding: 0.25rem;width: 14rem;height: 1.5rem;"/>
+          <input type="text" placeholder="Password" x-model="password"
+                 style="margin: 1rem;padding: 0.25rem;width: 14rem;height: 1.5rem;"/>
+          <button @click="logIn()"
+                  style="background-color: #c9ac07;border: none;color: white;
+                         padding: 15px 32px;text-align: center;text-decoration: none;
+                         font-size: 16px;margin-left: 3rem;width: 10rem;
+                         cursor: pointer;-webkit-transition-duration: 0.4s;transition-duration: 0.4s;
+                         box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);"
+           >
+           Log in
+          </button>
         </form>
       </div>
     </main>
