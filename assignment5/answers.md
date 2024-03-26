@@ -91,7 +91,7 @@ Step One:
 - Create your go.mod file `go mod init <name of directory>`
 
 Step Two:
-- At the top of the file that contains the code you want to import declare the package name of for this file: `package <package name>`
+- At the top of the file that contains the code you want to import declare the package name for this file: `package <package name>`
 
 Step Three:
 - In the file that you want to import too, have an import that looks like this:
@@ -115,4 +115,4 @@ References
 
 - https://www.tutorialspoint.com/golang-program-to-show-inheritance-in-class#:~:text=As%20classes%20are%20not%20supported,Golang%20doesn't%20support%20inheritance.
 
-https://fullstackdojo.medium.com/the-python-str-method-and-the-go-string-method-a-comparison-75770c78c4d8
+- https://fullstackdojo.medium.com/the-python-str-method-and-the-go-string-method-a-comparison-75770c78c4d8
