@@ -17,8 +17,7 @@ func CreateUser(username string, password string) {
 		Username: username,
 		Password: password,
 	}
-
-	byteArray,err1 := os.ReadFile("/Users/megangenualdi/programming_language_project/project/jsonFiles/main.json")
+	byteArray,err1 := os.ReadFile("/Users/mgenualdi/Desktop/projects/programming_language_project/project/jsonFiles/main.json")
 	if err1 != nil {
 		fmt.Println(err1)
 	}
@@ -34,7 +33,7 @@ func CreateUser(username string, password string) {
 		fmt.Println(err2)
 	}
 
-	err3 := os.WriteFile("/Users/megangenualdi/programming_language_project/project/jsonFiles/main.json", jsonStr, os.ModePerm)
+	err3 := os.WriteFile("/Users/mgenualdi/Desktop/projects/programming_language_project/project/jsonFiles/main.json", jsonStr, os.ModePerm)
 	if err3 != nil {
 		fmt.Println(err3)
 	}
