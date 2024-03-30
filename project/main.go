@@ -33,7 +33,6 @@ func main() {
 		port = "3000"
 	}
 
-
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", indexHandler)
 	mux.HandleFunc("/habit/", habitViewHandler)
