@@ -17,6 +17,10 @@ func CreateUser(username string, password string) {
 		Username: username,
 		Password: password,
 	}
+	user.Habits = []Habit{
+		CreateHabit(map[string]string{}, "Reading"),
+	}
+
 	byteArray,err1 := os.ReadFile("/Users/mgenualdi/Desktop/projects/programming_language_project/project/jsonFiles/main.json")
 	if err1 != nil {
 		fmt.Println(err1)
