@@ -17,7 +17,10 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func habitViewHandler(w http.ResponseWriter, r *http.Request) {
-	gridView.Execute(w, nil)
+	params,_ := url.ParseQuery(r.URL.RawQuery)
+	username := params.Get("username")
+	data := structs.GetUser(username)
+	gridView.Execute(w, data)
 }
 
 func loginViewHandler(w http.ResponseWriter, r *http.Request){
@@ -25,6 +28,10 @@ func loginViewHandler(w http.ResponseWriter, r *http.Request){
 	username := params.Get("username")
 	password := params.Get("password")
 	structs.CreateUser(username, password)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	jsonData := []byte(`{"status":"OK"}`)
+	w.Write(jsonData)
 }
 
 func main() {
@@ -35,7 +42,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", indexHandler)
-	mux.HandleFunc("/habit/", habitViewHandler)
+	mux.HandleFunc("/habit", habitViewHandler)
 	mux.HandleFunc("/login/", loginViewHandler)
 	http.ListenAndServe(":"+port, mux)
 }
