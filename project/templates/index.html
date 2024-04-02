@@ -29,7 +29,10 @@
               },
               body: JSON.stringify({'username': this.username, 'password': this.password})
             })
-            .then((response) => window.location.replace("http://localhost:3000/habit/"))
+            .then(response => {
+              console.log(response)
+              window.location.replace(`http://localhost:3000/habit/${this.username}`)
+            })
             .catch((error) => console.error("Error:", error));
           },
   

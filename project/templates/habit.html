@@ -1,18 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height: 100%;">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Habit view</title>
-    <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/minty/bootstrap.min.css" integrity="sha384-H4X+4tKc7b8s4GoMrylmy2ssQYpDHoqzPa9aKXbDwPoPUA3Ra8PA5dGzijN+ePnH" crossorigin="anonymous">
-    <link href="style.css" rel="stylesheet">
+    <title>Final project</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel='stylesheet' href="style.css">
+    <script>
+      (function(document, window, undefined) {
+        window.habit = function() {
+        return {
+          username: '',
+          data: [],
+          currentHabit: [],
+          habitList: [],
+
+          init() {
+            var params = new URL(window.location).searchParams;
+            this.username = params.get('username') || "";
+            this.data = {{.}};
+            this.currentHabit = this.data['habits'][0];
+            for (var i = 0; i < this.data['habits'].length; i++) {
+              this.habitList.push(this.data['habits'][i]['name']);
+            }
+            console.log(this.habitList)
+          },
+
+        };
+      };
+      })(document, window);
+    </script>
   </head>
-  <body>
-    <main>
+  <body style="height: 100%;background-image: linear-gradient(rgb(248, 222, 179), rgb(138, 228, 198));">
+    <main x-data="habit()">
+      <p>Hello,</p><p x-text="username"></p>
       <div>
-        <p class="underline">Testing - habit view</p>
+        <select>
+          <template x-for="habit in habitList">
+            <option x-text="habit" :selected="habit == currentHabit.name"></option>
+          </template>
+        </select>
+        <div x-text="currentHabit.name"></div>
+        <template x-for="grid in currentHabit.grids">
+          <div style="display: inline-flex; flex-direction: row;">
+            <div style="margin: 2rem;">
+              <div x-text="grid.month"></div>
+              <div>
+                <template x-for="day in grid.days">
+                  <div>
+                    <button style="border: 1px outset blue; background-color: white;
+                                   padding: 0.5rem; height:2rem; width:2rem; cursor:pointer; margin: 0.5rem;">
+                    </button>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+        </template>
       </div>
     </main>
   </body>
