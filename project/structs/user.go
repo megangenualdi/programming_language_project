@@ -31,6 +31,13 @@ func CreateUser(username string, password string) {
 		fmt.Println(err)
 	}
 
+	for i := 0; i < len(newJson); i++ {
+		if newJson[i].Username == username {
+			fmt.Println("Username already exists")
+			return
+		}
+	}
+
 	newJson = append(newJson, user)
 	jsonStr,err2 := json.Marshal(newJson)
 	if err2 != nil {
@@ -42,3 +49,24 @@ func CreateUser(username string, password string) {
 		fmt.Println(err3)
 	}
 }
+
+func GetUser(username string) User {
+	byteArray,err1 := os.ReadFile("/Users/mgenualdi/Desktop/projects/programming_language_project/project/jsonFiles/main.json")
+	if err1 != nil {
+		fmt.Println(err1)
+	}
+	newJson := []User{}
+	err := json.Unmarshal(byteArray, &newJson)
+	if err != nil {
+		fmt.Println(err)
+	}
+	
+	user := User{}
+	for i := 0; i < len(newJson); i++ {
+		if newJson[i].Username == username {
+			fmt.Println("User found")
+			user = newJson[i]
+		}
+	}
+	return user
+	}
