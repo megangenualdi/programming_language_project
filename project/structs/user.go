@@ -17,8 +17,14 @@ func CreateUser(username string, password string) {
 		Username: username,
 		Password: password,
 	}
+	keyValues := map[string]map[string]string{
+		"1": {"color": "#A3E4D7", "text": "Read less than ten minutes"},
+		"2": {"color": "#48C9B0", "text": "Read more than ten minutes"},
+		"3": {"color": "#17A589", "text": "Read 30 minutes or less"},
+		"4": {"color": "#0E6251", "text": "Read more than 30 minutes"},
+	}
 	user.Habits = []Habit{
-		CreateHabit(map[string]string{}, "Reading"),
+		CreateHabit(keyValues, "Reading", "Read at least 30 minutes per day"),
 	}
 
 	byteArray,err1 := os.ReadFile("/Users/mgenualdi/Desktop/projects/programming_language_project/project/jsonFiles/main.json")

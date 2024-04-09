@@ -6,6 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Final project</title>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel='stylesheet' href="style.css">
     <script>
       (function(document, window, undefined) {
@@ -15,6 +19,9 @@
           data: [],
           currentHabit: [],
           habitList: [],
+          selectedDay: '',
+          selectedMonth: '',
+          selectedLevel: '',
 
           init() {
             var params = new URL(window.location).searchParams;
@@ -24,15 +31,39 @@
             for (var i = 0; i < this.data['habits'].length; i++) {
               this.habitList.push(this.data['habits'][i]['name']);
             }
-            console.log(this.habitList)
           },
 
+          onChange() {
+            console.log(this.currentHabit)
+          },
+
+          createHabit() {
+            console.log("habit function")
+            console.log(this.currentHabit)
+          },
+
+          updateDay() {
+            if (!this.selectedLevel) {
+              alert("Please select a completion level");
+              return;
+            }
+            var habit = this.currentHabit['name'];
+            fetch(`http://localhost:3000/update-day/?habit=${habit}&day=${this.selectedDay}&month=${this.selectedMonth}&username=${this.username}&level=${this.selectedLevel}`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({'habit': this.currentHabit.name, 'day': this.selectedDay, 'month': this.selectedMonth, 'username': this.username})
+            })
+            .then(response => {alert("Day updated!"); window.location.replace(`http://localhost:3000/habit?username=${this.username}`);})
+            .catch((error) => {alert("Error:", error);});
+          },
         };
       };
       })(document, window);
     </script>
   </head>
-  <body style="height: 100%;background-image: linear-gradient(rgb(248, 222, 179), rgb(138, 228, 198));">
+  <body style="height: 100%;background-image: linear-gradient(rgb(248, 222, 179), rgb(138, 228, 198), rgb(248, 222, 179));">
     <main x-data="habit()">
       <p>Hello,</p><p x-text="username"></p>
       <div>
@@ -41,16 +72,27 @@
             <option x-text="habit" :selected="habit == currentHabit.name"></option>
           </template>
         </select>
-        <div x-text="currentHabit.name"></div>
-        <template x-for="grid in currentHabit.grids">
+        <div>
+          <div style="width: 100%;display: inline-flex;flex-direction: row;justify-content: space-between;">
+            <div>
+              <div x-text="currentHabit.name"></div>
+              <div x-text="currentHabit.goal"></div> 
+            </div>
+          </div>
+        </div>
+        <div style="display: inline-flex; flex-direction: row;">
+          <template x-for="grid in currentHabit.grids">
           <div style="display: inline-flex; flex-direction: row;">
             <div style="margin: 2rem;">
               <div x-text="grid.month"></div>
               <div>
                 <template x-for="day in grid.days">
                   <div>
-                    <button style="border: 1px outset blue; background-color: white;
-                                   padding: 0.5rem; height:2rem; width:2rem; cursor:pointer; margin: 0.5rem;">
+                    <button style="border: 1px outset blue;
+                                   padding: 0.5rem; height:2rem; width:2rem; cursor:pointer; margin: 0.5rem;"
+                            :style="day.completed ? 'height:2rem; width:2rem; cursor:pointer; margin: 0.5rem; background-color: ' + day.level.color + ';' : 'height:2rem; width:2rem; cursor:pointer; margin: 0.5rem; background-color: white;'"
+                            @click="selectedDay = day.number; selectedMonth = grid.month;"
+                            data-toggle="modal" data-target="#exampleModal" data-day="day.number" data-month="grid.month">
                     </button>
                   </div>
                 </template>
@@ -58,6 +100,48 @@
             </div>
           </div>
         </template>
+        <div style="justify-self: center;">
+          <p>Key</p>
+          <div>
+            <template x-for="level in currentHabit.key.levels">
+              <div>
+                <button style="border: 1px outset blue;
+                               padding: 0.5rem; height:4rem; width:4rem; cursor:pointer; margin: 0.5rem;"
+                        :style="'height:2rem; width:2rem; background-color: ' + level.color">
+                </button>
+                <p x-text="level.text"></p>
+              </div>
+            </template>
+          </div>
+        </div>
+        </div>
+      </div>
+    
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel" x-text="selectedMonth + ' ' + selectedDay"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <select id="level" name="level" x-model="selectedLevel">
+                  <option>Select a completion level</option>
+                  <template x-for="level in currentHabit.key.levels">
+                    <option :value="level.level" x-text="level.text"></option>
+                  </template>
+                </select>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" @click="updateDay()">Save changes</button>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   </body>
