@@ -20,8 +20,6 @@
           },
 
           logIn(e) {
-            console.log(e)
-            console.log(this.username)
             fetch(`http://localhost:3000/login/?username=${this.username}&password=${this.password}`, {
               method: "POST",
               headers: {
@@ -30,7 +28,11 @@
               body: JSON.stringify({'username': this.username, 'password': this.password})
             })
             .then(response => {
-              window.location.replace(`http://localhost:3000/habit?username=${this.username}`)
+              if (response.status == 200) {
+                window.location.replace(`http://localhost:3000/habit?username=${this.username}`)
+              } else {
+                alert("Invalid username or password")
+              }  
             })
             .catch((error) => console.error("Error:", error));
           },

@@ -104,8 +104,7 @@ func CreateDaysByMonthYear(month time.Month, year int) []Day {
 }
 
 
-func UpdateGrid(username string, habit string, day string, month string, level string) {
-
+func UpdateGrid(username string, habit string, day string, month string, level string) User {
 	byteArray,err1 := os.ReadFile("/Users/mgenualdi/Desktop/projects/programming_language_project/project/jsonFiles/main.json")
 	if err1 != nil {
 		fmt.Println(err1)
@@ -119,10 +118,11 @@ func UpdateGrid(username string, habit string, day string, month string, level s
 
 	dayInt,_ := strconv.Atoi(day)
 	levelInt,_ := strconv.Atoi(level)
+	user := User{}
 
 	for i := 0; i < len(newJson); i++ {
 		if newJson[i].Username == username {
-			user := newJson[i]
+			user = newJson[i]
 			for j := 0; j < len(user.Habits); j++ {
 				if user.Habits[j].Name == habit {
 					key := user.Habits[j].Key
@@ -158,5 +158,7 @@ func UpdateGrid(username string, habit string, day string, month string, level s
 	if err3 != nil {
 		fmt.Println(err3)
 	}
+
+	return user
 
 }

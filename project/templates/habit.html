@@ -22,24 +22,78 @@
           selectedDay: '',
           selectedMonth: '',
           selectedLevel: '',
+          name: '',
+          goal: '',
+          level1: '',
+          hexCode1: '#A3E4D7',
+          level2: '',
+          hexCode2: '#48C9B0',
+          level3: '',
+          hexCode3: '#17A589',
+          level4: '',
+          hexCode4: '#0E6251',
 
           init() {
             var params = new URL(window.location).searchParams;
-            this.username = params.get('username') || "";
             this.data = {{.}};
-            this.currentHabit = this.data['habits'][0];
-            for (var i = 0; i < this.data['habits'].length; i++) {
-              this.habitList.push(this.data['habits'][i]['name']);
+            if (!this.data['habits']) {
+              window.location.replace("http://localhost:3000/")
             }
+            this.username = this.data['username']
+            if (this.data['username'] !== params.get('username')) {
+              window.location.replace("http://localhost:3000/")
+            }
+
+            this.currentHabit = this.data['habits'][0];
+            var habitSet = new Set();
+            for (var i = 0; i < this.data['habits'].length; i++) {
+              habitSet.add(this.data['habits'][i]['name']);
+            }
+            this.habitList = [...habitSet];
           },
 
           onChange() {
             console.log(this.currentHabit)
+            for (var i = 0; i < this.data['habits'].length; i++) {
+              if (this.data['habits'][i]['name'] === this.currentHabit) {
+                this.currentHabit = this.data['habits'][i];
+              }
+            }
           },
 
           createHabit() {
             console.log("habit function")
-            console.log(this.currentHabit)
+            if (!this.name || !this.goal) {
+              alert("To create a new habit, please enter a name and goal.");
+              return;
+            }
+            if (this.habitList.indexOf(this.name) > -1) {
+              alert("Habit already exists!");
+              return;
+            }
+            var params = new URLSearchParams();
+            params.set('name', this.name);
+            params.set('username', this.username);
+            params.set('goal', this.goal);
+            params.set('hexCode1', this.hexCode1);
+            params.set('hexCode2', this.hexCode2);
+            params.set('hexCode3', this.hexCode3);
+            params.set('hexCode4', this.hexCode4);
+            params.set('level1', this.level1);
+            params.set('level2', this.level2);
+            params.set('level3', this.level3);
+            params.set('level4', this.level4);
+
+            fetch(`http://localhost:3000/create-habit/?${params.toString()}`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              }
+            })
+            .then(response => {alert("New habit created!");
+              console.log(this.username)
+              window.location.replace(`http://localhost:3000/habit?username=${this.username}`);})
+            .catch((error) => {alert("Error:", error);});
           },
 
           updateDay() {
@@ -55,7 +109,9 @@
               },
               body: JSON.stringify({'habit': this.currentHabit.name, 'day': this.selectedDay, 'month': this.selectedMonth, 'username': this.username})
             })
-            .then(response => {alert("Day updated!"); window.location.replace(`http://localhost:3000/habit?username=${this.username}`);})
+            .then(response => {alert("Day updated!");
+            console.log(this.username)
+            window.location.replace(`http://localhost:3000/habit?username=${this.username}`);})
             .catch((error) => {alert("Error:", error);});
           },
         };
@@ -65,19 +121,20 @@
   </head>
   <body style="height: 100%;background-image: linear-gradient(rgb(248, 222, 179), rgb(138, 228, 198), rgb(248, 222, 179));">
     <main x-data="habit()">
-      <p>Hello,</p><p x-text="username"></p>
+      <p style="margin: 2rem;">Hello,</p><p style="margin: 2rem;" x-text="username"></p>
       <div>
-        <select>
-          <template x-for="habit in habitList">
-            <option x-text="habit" :selected="habit == currentHabit.name"></option>
-          </template>
-        </select>
-        <div>
-          <div style="width: 100%;display: inline-flex;flex-direction: row;justify-content: space-between;">
-            <div>
-              <div x-text="currentHabit.name"></div>
-              <div x-text="currentHabit.goal"></div> 
-            </div>
+        <div style="width: 90%; margin: 2rem;display: inline-flex;flex-direction: row;justify-content: space-between;">
+          <select x-model="currentHabit" @change="onChange()">
+            <template x-for="habit in habitList">
+              <option x-text="habit" :selected="habit == currentHabit.name"></option>
+            </template>
+          </select>
+          <div>
+            <div x-text="currentHabit.name"></div>
+            <div x-text="currentHabit.goal"></div>
+          </div>
+          <div>
+            <button data-toggle="modal" data-target="#createModal">Create a new habit</button>
           </div>
         </div>
         <div style="display: inline-flex; flex-direction: row;">
@@ -92,7 +149,7 @@
                                    padding: 0.5rem; height:2rem; width:2rem; cursor:pointer; margin: 0.5rem;"
                             :style="day.completed ? 'height:2rem; width:2rem; cursor:pointer; margin: 0.5rem; background-color: ' + day.level.color + ';' : 'height:2rem; width:2rem; cursor:pointer; margin: 0.5rem; background-color: white;'"
                             @click="selectedDay = day.number; selectedMonth = grid.month;"
-                            data-toggle="modal" data-target="#exampleModal" data-day="day.number" data-month="grid.month">
+                            data-toggle="modal" data-target="#dayModal" data-day="day.number" data-month="grid.month">
                     </button>
                   </div>
                 </template>
@@ -117,11 +174,11 @@
         </div>
       </div>
     
-      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal fade" id="dayModal" tabindex="-1" role="dialog" aria-labelledby="dayModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel" x-text="selectedMonth + ' ' + selectedDay"></h5>
+              <h5 class="modal-title" id="dayModalLabel" x-text="selectedMonth + ' ' + selectedDay"></h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -143,6 +200,83 @@
           </div>
         </div>
       </div>
+
+
+      <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="createModalLabel">Create a new habit</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div style="display: inline-flex; flex-direction: column;">
+                  <input id="name"
+                         name="name"
+                         type="text"
+                         x-model="name"
+                         placeholder="Enter habit a name"/>
+                  <input id="goal"
+                         name="goal"
+                         type="text"
+                         x-model="goal"
+                         placeholder="Enter goal to reach"/> 
+                  <div>
+                    <input id="level1"
+                           name="level1"
+                           type="text"
+                           x-model="level1"
+                           placeholder="Enter text for level 1"/>
+                    <input id="hexCode1"
+                           name="hexCode1"
+                           type="text"
+                           x-model="hexCode1"
+                           value="hexCode1"/>
+                    <input id="level2"
+                           name="level2"
+                           type="text"
+                           x-model="level2"
+                           placeholder="Enter text for level 2"/>
+                    <input id="hexCode2"
+                           name="hexCode2"
+                           type="text"
+                           x-model="hexCode2"
+                           value-="hexCode2"/>
+                    <input id="level3"
+                           name="level3"
+                           type="text"
+                           x-model="level3"
+                           placeholder="Enter text for level 3"/>
+                    <input id="hexCode3"
+                           name="hexCode3"
+                           type="text"
+                           x-model="hexCode3"
+                           value="hexCode3"/>
+                    <input id="level4"
+                           name="level4"
+                           type="text"
+                           x-model="level4"
+                           placeholder="Enter text for level 4"/>
+                    <input id="hexCode4"
+                           name="hexCode4"
+                           type="text"
+                           x-model="hexCode4"
+                           value="hexCode4"/>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" @click="createHabit()">Create</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  
     </main>
   </body>
 </html>

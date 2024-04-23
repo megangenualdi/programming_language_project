@@ -12,7 +12,7 @@ type User struct {
 	Habits []Habit `json:"habits"`
 }
 
-func CreateUser(username string, password string) {
+func CreateUser(username string, password string) string {
 	user := User{
 		Username: username,
 		Password: password,
@@ -37,14 +37,59 @@ func CreateUser(username string, password string) {
 		fmt.Println(err)
 	}
 
+	error_message := ""
+	newUser := true
 	for i := 0; i < len(newJson); i++ {
-		if newJson[i].Username == username {
-			fmt.Println("Username already exists")
-			return
+		if (newJson[i].Username == username) {
+			newUser = false
+			if (newJson[i].Password != password) {
+				fmt.Println(newJson[i].Password, password)
+				fmt.Println("This username is taken or the password entered does not match.")
+				error_message = "This username is taken or the password entered does not match."
+			}
 		}
 	}
+	if error_message != "" {
+		return error_message
+	}
 
-	newJson = append(newJson, user)
+	if (newUser && error_message == "") {
+		newJson = append(newJson, user)
+		jsonStr,err2 := json.Marshal(newJson)
+		if err2 != nil {
+			fmt.Println(err2)
+		}
+
+		err3 := os.WriteFile("/Users/mgenualdi/Desktop/projects/programming_language_project/project/jsonFiles/main.json", jsonStr, os.ModePerm)
+		if err3 != nil {
+			fmt.Println(err3)
+	}	
+	}
+	return error_message
+}
+
+func AddHabit(username string, habit Habit) User {
+	byteArray,err1 := os.ReadFile("/Users/mgenualdi/Desktop/projects/programming_language_project/project/jsonFiles/main.json")
+	if err1 != nil {
+		fmt.Println(err1)
+	}
+	newJson := []User{}
+	err := json.Unmarshal(byteArray, &newJson)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	user := User{}
+	for i := 0; i < len(newJson); i++ {
+		if newJson[i].Username == username {
+			user = newJson[i]
+			user.Habits = append(user.Habits, habit)
+			newJson[i] = user
+		}
+	}
+	user.Habits = append(user.Habits, habit)
+	fmt.Println("Adding habit: " + habit.Name + " for user: " + username)
+
 	jsonStr,err2 := json.Marshal(newJson)
 	if err2 != nil {
 		fmt.Println(err2)
@@ -54,6 +99,9 @@ func CreateUser(username string, password string) {
 	if err3 != nil {
 		fmt.Println(err3)
 	}
+
+	return user
+
 }
 
 func GetUser(username string) User {
@@ -75,4 +123,4 @@ func GetUser(username string) User {
 		}
 	}
 	return user
-	}
+}
