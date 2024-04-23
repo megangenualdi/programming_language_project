@@ -105,7 +105,7 @@ func CreateDaysByMonthYear(month time.Month, year int) []Day {
 
 
 func UpdateGrid(username string, habit string, day string, month string, level string) User {
-	byteArray,err1 := os.ReadFile("/Users/mgenualdi/Desktop/projects/programming_language_project/project/jsonFiles/main.json")
+	byteArray,err1 := os.ReadFile("/Users/megangenualdi/programming_language_project/project/jsonFiles/main.json")
 	if err1 != nil {
 		fmt.Println(err1)
 	}
@@ -154,7 +154,7 @@ func UpdateGrid(username string, habit string, day string, month string, level s
 		fmt.Println(err2)
 	}
 
-	err3 := os.WriteFile("/Users/mgenualdi/Desktop/projects/programming_language_project/project/jsonFiles/main.json", jsonStr, os.ModePerm)
+	err3 := os.WriteFile("/Users/megangenualdi/programming_language_project/project/jsonFiles/main.json", jsonStr, os.ModePerm)
 	if err3 != nil {
 		fmt.Println(err3)
 	}
