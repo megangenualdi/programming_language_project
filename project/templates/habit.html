@@ -34,15 +34,18 @@
           hexCode4: '#0E6251',
 
           init() {
+            console.log("entering habit")
             var params = new URL(window.location).searchParams;
             this.data = {{.}};
-            if (!this.data['habits']) {
-              window.location.replace("http://localhost:3000/")
-            }
-            this.username = this.data['username']
-            if (this.data['username'] !== params.get('username')) {
-              window.location.replace("http://localhost:3000/")
-            }
+
+            console.log(this.data)
+            // if (!this.data['habits']) {
+            //   window.location.replace("http://localhost:3000/")
+            // }
+            // this.username = this.data['username']
+            // if (this.data['username'] !== params.get('username')) {
+            //   window.location.replace("http://localhost:3000/")
+            // }
 
             this.currentHabit = this.data['habits'][0];
             var habitSet = new Set();

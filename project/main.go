@@ -6,12 +6,17 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 	"project/structs"
 )
 
 var mainView = template.Must(template.ParseFiles("templates/index.html"))
 var gridView = template.Must(template.ParseFiles("templates/habit.html"))
 var userData = structs.User{}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+}
 
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -22,24 +27,33 @@ func habitViewHandler(w http.ResponseWriter, r *http.Request) {
 	gridView.Execute(w, userData)
 }
 
+
 func loginViewHandler(w http.ResponseWriter, r *http.Request){
-	params,_ := url.ParseQuery(r.URL.RawQuery)
-	username := params.Get("username")
-	password := params.Get("password")
-	error_message := structs.CreateUser(username, password)
-	w.Header().Set("Content-Type", "application/json")
-	jsonData := []byte(`{"status":"OK"}`)
-	if (error_message != "") {
-		w.WriteHeader(http.StatusConflict)
-		jsonData = []byte(`{"status":"ERROR", "error_message":` + error_message + `}`)
-	} else {
-		w.WriteHeader(http.StatusOK)
-		userData = structs.GetUser(username)
+	enableCors(&w)
+	if r.Method == http.MethodPost {
+		err := r.ParseForm()
+		if err != nil {
+				http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+				return
+		}
+
+		username := strings.TrimSpace(r.Form.Get("username"))
+    password := r.Form.Get("password")
+	
+		error_message := structs.CreateUser(username, password)
+		if (error_message == "") {
+			userData = structs.GetUser(username)
+			http.Redirect(w, r, "/habit/?username="+username, http.StatusFound)
+		} else {
+			fmt.Println(error_message)
+			mainView.Execute(w, error_message)
+		}
 	}
-	w.Write(jsonData)
 }
 
+
 func updateDay(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	params,_ := url.ParseQuery(r.URL.RawQuery)
 	habit := params.Get("habit")
 	day := params.Get("day")
@@ -47,11 +61,13 @@ func updateDay(w http.ResponseWriter, r *http.Request) {
 	level := params.Get("level")
 	username := params.Get("username")
 	user := structs.UpdateGrid(username, habit, day, month, level)
-	fmt.Println("Updating habit: " + habit + " for user: " + username + " on day: " + day + " and month: " + month)
+	fmt.Println("Updating habit: " + " for user: " + username + " on day: " + day + " and month: " + month)
 	userData = user
 }
 
+
 func createHabit(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	params,_ := url.ParseQuery(r.URL.RawQuery)
 	name := params.Get("name")
 	goal := params.Get("goal")
@@ -67,6 +83,7 @@ func createHabit(w http.ResponseWriter, r *http.Request) {
 	userData = user
 	fmt.Println("Creating grid for habit: " + name + " for user: " + username + " with goal: " + goal)
 }
+
 
 func main() {
 	port := os.Getenv("PORT")
