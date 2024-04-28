@@ -42,11 +42,8 @@ func CreateUser(username string, password string) string {
 	for i := 0; i < len(newJson); i++ {
 		if (newJson[i].Username == username) {
 			newUser = false
-			if (newJson[i].Password != password) {
-				fmt.Println(newJson[i].Password, password)
-				fmt.Println("This username is taken or the password entered does not match.")
-				error_message = "This username is taken or the password entered does not match."
-			}
+			fmt.Println("The entered username is taken")
+			error_message = "The entered username is taken"
 		}
 	}
 	if error_message != "" {
@@ -67,6 +64,7 @@ func CreateUser(username string, password string) string {
 	}
 	return error_message
 }
+
 
 func AddHabit(username string, habit Habit) User {
 	byteArray,err1 := os.ReadFile("/Users/megangenualdi/programming_language_project/project/jsonFiles/main.json")
