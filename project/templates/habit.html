@@ -10,7 +10,6 @@
     <script defer src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel='stylesheet' href="style.css">
     <script>
       (function(document, window, undefined) {
         window.habit = function() {
@@ -34,7 +33,7 @@
             this.data = {{.}};
             this.username = this.data['user']['username']
 
-            if (this.data['user']['habits'].length === 0) {
+            if (this.data['user']['username'] === '') {
               window.location.replace("http://localhost:3000/")
             }
   
@@ -60,26 +59,52 @@
 
           updateDay() {
             var form = document.getElementById("updateDayForm");
-            var inputs = Object.values(form).reduce((obj,field) => { obj[field.name] = field.value; return obj }, {})
+            var inputs = Object.values(form).reduce((obj,field) => { obj[field.name] = field.value; return obj }, {});
             if (inputs['level'] === "null") {
-              alert("A level selection is required.")
+              alert("A level selection is required.");
             } else {
-              document.getElementById("updateDayForm").submit()
+              document.getElementById("updateDayForm").submit();
             }
           },
 
           createHabit() {
             var form = document.getElementById("createHabitForm");
-            var inputs = Object.values(form).reduce((obj,field) => { obj[field.name] = field.value; return obj }, {})
-            console.log(inputs)
-            if (inputs['name'] === '' || inputs['goal'] === '') {
+            var inputs = Object.values(form).reduce((obj,field) => { obj[field.name] = field.value; return obj }, {});
+            var nameCheck = this.checkCreateFormInputs(inputs['name']);
+            var goalCheck = this.checkCreateFormInputs(inputs['goal']);
+            var hexCodeCheck = this.checkHexCodeInputs(inputs);
+            if ( nameCheck === false || goalCheck === false || hexCodeCheck === false) {
               var text = "The following is required:";
-              inputs['name'] === '' ? text = `${text}\n- Name` : "";
-              inputs['goal'] === '' ? text = `${text}\n- Goal` : "";
-              alert(text)
+              nameCheck ? "" : text = `${text}\n- Name`;
+              goalCheck ? "" : text = `${text}\n- Goal`;
+              hexCodeCheck ? "" : text = `${text}\n- Hex codes`;
+              alert(text);
             } else {
               document.getElementById("createHabitForm").submit();
-            }  
+            };
+          },
+
+          checkCreateFormInputs(value) {
+            if (value === '' || value.match(/^\s*$/)) {
+              return false;
+            };
+            return true;
+          },
+
+          checkHexCodeInputs(inputs) {
+            if (inputs['hexCode1'] === '') {
+              return false;
+            };
+            if (inputs['hexCode2'] === '') {
+              return false;
+            };
+            if (inputs['hexCode3'] === '') {
+              return false;
+            };
+            if (inputs['hexCode4'] === '') {
+              return false;
+            };
+            return true
           },
 
         };
@@ -94,14 +119,23 @@
           <h1 style="font-family: 'Brush Script MT', cursive; font-size: 2.5rem;" x-text="currentHabit.name"></h1>
           <div x-text="currentHabit.goal"></div>
         </div>
-        <div style="display: inline-flex;flex-direction: row;">
-          <p>Logged in as:</p>
-          <p style="margin-left: 0.25rem;" x-text="username"></p>
+        <div style="display: inline-flex;flex-direction: column;">
+          <div style="display: inline-flex;flex-direction: row; justify-items: center;">
+            <p>Logged in as:</p>
+            <p style="margin-left: 0.25rem;" x-text="username"></p>
+          </div>
+          <div>
+            <a href="/logout/" style="color: rgb(102, 101, 101)">
+              <button type="button" class="btn btn-default btn-sm">
+                Log out
+              </button> 
+            </a> 
+          </div>
         </div>
       </div>
       <div>
         <div style="width: 95%; margin: 2rem; margin-top: 0rem; display: inline-flex;flex-direction: row;justify-content: space-between;">
-          <select x-model="selectedHabit" @change="onChange()">
+          <select x-model="selectedHabit" @change="onChange()" style="padding: 0.25rem;width: 10rem;height: 2rem; color: rgb(102, 101, 101)">
             <template x-for="habit in habitList">
               <option x-text="habit" :selected="habit == currentHabit.name"></option>
             </template>
@@ -156,7 +190,7 @@
     
       <div class="modal fade" id="dayModal" tabindex="-1" role="dialog" aria-labelledby="dayModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-          <div class="modal-content">
+          <div class="modal-content" style="background-color: rgb(246, 235, 220); color: rgb(59, 97, 99);">
             <div class="modal-header">
               <h5 class="modal-title" id="dayModalLabel" x-text="selectedMonth + ' ' + selectedDay"></h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -168,7 +202,7 @@
                 <input id="month" name="month" :value="selectedMonth" hidden/>
                 <input id="day" name="day" :value="selectedDay" hidden/>
                 <input id="habit" name="habit" :value="currentHabit.name" hidden/>
-                <select id="level" name="level" required>
+                <select id="level" name="level" required style="padding: 0.25rem;width: 14rem;height: 2rem; color: rgb(102, 101, 101)">
                   <option value="null">Select a completion level</option>
                   <template x-for="level in currentHabit.key.levels">
                     <option :value="level.level" x-text="level.text"></option>
@@ -177,8 +211,9 @@
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal" @click="updateDay()">Save changes</button>
+              <button type="button" class="btn btn-secondary" style="color: rgb(59, 97, 99); background-color: white;" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" 
+              style="background-color: rgb(59, 97, 99);" data-dismiss="modal" @click="updateDay()">Save changes</button>
             </div>
           </div>
         </div>
@@ -188,7 +223,7 @@
       <div class="modal fade" id="createModal" tabindex="-1" role="dialog"
       aria-labelledby="createModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-          <div class="modal-content">
+          <div class="modal-content" style="background-color: rgb(246, 235, 220); color: rgb(59, 97, 99);">
             <div class="modal-header">
               <h5 class="modal-title" id="createModalLabel">Create a new habit</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -201,51 +236,67 @@
                   <input id="name"
                          name="name"
                          type="text"
-                         placeholder="Enter habit a name"/>
+                         placeholder="Enter habit a name"
+                         style="margin-bottom: 0.5rem;padding: 0.25rem;width: 14rem;height: 1.5rem;"/>
                   <input id="goal"
                          name="goal"
                          type="text"
-                         placeholder="Enter goal to reach"/> 
+                         placeholder="Enter goal to reach"
+                         style="margin-top: 0.5rem; margin-bottom: 0.5rem;padding: 0.25rem;width: 14rem;height: 1.5rem;"/> 
                   <div>
                     <input id="level1"
                            name="level1"
                            type="text"
-                           placeholder="Enter text for level 1"/>
+                           placeholder="Enter text for level 1"
+                           style="padding: 0.25rem;width: 14rem;height: 1.5rem;"/>
                     <input id="hexCode1"
                            name="hexCode1"
                            type="text"
-                           :value="hexCode1"/>
+                           :value="hexCode1"
+                           placeholder="Enter a hex code for level 1"
+                           style="margin-top: 0.5rem; margin-bottom: 0.5rem;padding: 0.25rem;width: 14rem;height: 1.5rem;"/>
                     <input id="level2"
                            name="level2"
                            type="text"
-                           placeholder="Enter text for level 2"/>
+                           placeholder="Enter text for level 2"
+                           style="margin-top: 0.5rem; margin-bottom: 0.5rem;padding: 0.25rem;width: 14rem;height: 1.5rem;"/>
                     <input id="hexCode2"
                            name="hexCode2"
                            type="text"
-                           :value="hexCode2"/>
+                           :value="hexCode2"
+                           placeholder="Enter a hex code for level 2"
+                           style="padding: 0.25rem;width: 14rem;height: 1.5rem;"/>
                     <input id="level3"
                            name="level3"
                            type="text"
-                           placeholder="Enter text for level 3"/>
+                           placeholder="Enter text for level 3"
+                           style="margin-top: 0.5rem; margin-bottom: 0.5rem;padding: 0.25rem;width: 14rem;height: 1.5rem;"/>
                     <input id="hexCode3"
                            name="hexCode3"
                            type="text"
-                           :value="hexCode3"/>
+                           :value="hexCode3"
+                           placeholder="Enter a hex code for level 3"
+                           style="margin-top: 0.5rem; margin-bottom: 0.5rem;padding: 0.25rem;width: 14rem;height: 1.5rem;"/>
                     <input id="level4"
                            name="level4"
                            type="text"
-                           placeholder="Enter text for level 4"/>
+                           placeholder="Enter text for level 4"
+                           style="margin-top: 0.5rem; margin-bottom: 0.5rem;padding: 0.25rem;width: 14rem;height: 1.5rem;"/>
                     <input id="hexCode4"
                            name="hexCode4"
                            type="text"
-                           :value="hexCode4"/>
+                           :value="hexCode4"
+                           placeholder="Enter a hex code for level 4"
+                           style="margin-top: 0.5rem; margin-bottom: 0.5rem;padding: 0.25rem;width: 14rem;height: 1.5rem;"/>
                   </div>
                 </div>
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal" @click="createHabit()">Create</button>
+              <button type="button" class="btn btn-secondary" style="color: rgb(59, 97, 99); background-color: white;" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary"
+              style="background-color: rgb(59, 97, 99);"
+              data-dismiss="modal" @click="createHabit()">Create</button>
             </div>
           </div>
         </div>

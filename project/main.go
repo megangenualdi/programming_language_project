@@ -36,7 +36,15 @@ func createAccountHandler(w http.ResponseWriter, r *http.Request){
 		}
 
 		username := strings.TrimSpace(r.Form.Get("username"))
-    password := r.Form.Get("password")
+    password := strings.TrimSpace(r.Form.Get("password"))
+
+		if (username == "" || password == "") {
+			fmt.Println("The username and password fields cannot be empty.")
+			instance.Message = "The username and password fields cannot be empty."
+			http.Redirect(w, r, "/", http.StatusFound)
+			return
+		}
+		
 	
 		error_message := structs.CreateUser(username, password)
 		if (error_message == "") {
@@ -61,7 +69,14 @@ func loginViewHandler(w http.ResponseWriter, r *http.Request){
 		}
 
 		username := strings.TrimSpace(r.Form.Get("username"))
-    password := r.Form.Get("password")
+    password := strings.TrimSpace(r.Form.Get("password"))
+
+		if (username == "" || password == "") {
+			fmt.Println("The username and password fields cannot be empty.")
+			instance.Message = "The username and password fields cannot be empty."
+			http.Redirect(w, r, "/", http.StatusFound)
+			return
+		}
 		
 		findUser := structs.GetUser(username)
 		if (findUser.Username != "") {
@@ -127,10 +142,10 @@ func createHabit(w http.ResponseWriter, r *http.Request) {
 		goal := r.Form.Get("goal")
 		username := instance.LoggedIn.Username
 	  keyValues := map[string]map[string]string{
-			"1": {"color": r.Form.Get("hexCode1"), "text": r.Form.Get("level1")},
-			"2": {"color": r.Form.Get("hexCode2"), "text": r.Form.Get("level2")},
-			"3": {"color": r.Form.Get("hexCode3"), "text": r.Form.Get("level3")},
-			"4": {"color": r.Form.Get("hexCode4"), "text": r.Form.Get("level4")},
+			"1": {"color": r.Form.Get("hexCode1"), "text": parseFormValue(r.Form.Get("level1"), "1")},
+			"2": {"color": r.Form.Get("hexCode2"), "text": parseFormValue(r.Form.Get("level2"), "2")},
+			"3": {"color": r.Form.Get("hexCode3"), "text": parseFormValue(r.Form.Get("level3"), "3")},
+			"4": {"color": r.Form.Get("hexCode4"), "text": parseFormValue(r.Form.Get("level4"), "4")},
 		}
 		habit := structs.CreateHabit(keyValues, name, goal)
 		user := structs.AddHabit(username, habit)
@@ -139,6 +154,15 @@ func createHabit(w http.ResponseWriter, r *http.Request) {
 		instance.Message = "Successfully created grid"
 		http.Redirect(w, r, "/habit/", http.StatusFound)
 		fmt.Println("Creating grid for habit: " + name + " for user: " + username + " with goal: " + goal)
+	}
+}
+
+
+func parseFormValue(value string, defaultValue string) string {
+	if (value == "") {
+		return defaultValue
+	} else {
+		return value
 	}
 }
 
