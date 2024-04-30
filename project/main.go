@@ -15,11 +15,6 @@ var gridView = template.Must(template.ParseFiles("templates/habit.html"))
 var instance = structs.Instance{}
 
 
-func enableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-}
-
-
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	mainView.Execute(w, instance)
 	instance.Message = ""
@@ -33,7 +28,6 @@ func habitViewHandler(w http.ResponseWriter, r *http.Request) {
 
 
 func createAccountHandler(w http.ResponseWriter, r *http.Request){
-	enableCors(&w)
 	if r.Method == http.MethodPost {
 		err := r.ParseForm()
 		if err != nil {
@@ -59,7 +53,6 @@ func createAccountHandler(w http.ResponseWriter, r *http.Request){
 
 
 func loginViewHandler(w http.ResponseWriter, r *http.Request){
-	enableCors(&w)
 	if r.Method == http.MethodPost {
 		err := r.ParseForm()
 		if err != nil {
@@ -90,8 +83,13 @@ func loginViewHandler(w http.ResponseWriter, r *http.Request){
 }
 
 
+func logoutViewHandler(w http.ResponseWriter, r *http.Request) {
+	instance = structs.Instance{}
+	http.Redirect(w, r, "/", http.StatusFound)
+}
+
+
 func updateDay(w http.ResponseWriter, r *http.Request) {
-	enableCors(&w)
 	fmt.Println("Updating day")
 	if r.Method == http.MethodPost {
 		err := r.ParseForm()
@@ -118,7 +116,6 @@ func updateDay(w http.ResponseWriter, r *http.Request) {
 
 
 func createHabit(w http.ResponseWriter, r *http.Request) {
-	enableCors(&w)
 	fmt.Println("Creating habit")
 	if r.Method == http.MethodPost {
 		err := r.ParseForm()
@@ -146,17 +143,16 @@ func createHabit(w http.ResponseWriter, r *http.Request) {
 }
 
 
+// PORT=<enter port> FILEPATH=<enter path to json file>  go run main.go
 func main() {
 	port := os.Getenv("PORT")
-	if port == "" {
-		port = "3000"
-	}
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", indexHandler)
 	mux.HandleFunc("/habit/", habitViewHandler)
 	mux.HandleFunc("/create-account/", createAccountHandler)
 	mux.HandleFunc("/login/", loginViewHandler)
+	mux.HandleFunc("/logout/", logoutViewHandler)
 	mux.HandleFunc("/update-day/", updateDay)
 	mux.HandleFunc("/create-habit/", createHabit)
 	http.ListenAndServe(":"+port, mux)
