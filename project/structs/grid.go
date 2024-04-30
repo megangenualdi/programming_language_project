@@ -42,6 +42,9 @@ type Day struct {
 }
 
 
+var FilePath = os.Getenv("FILEPATH")
+
+
 func CreateHabit(keyValues map[string]map[string]string, name string, goal string) Habit {
 	return Habit{
 			Name: name,
@@ -105,7 +108,7 @@ func CreateDaysByMonthYear(month time.Month, year int) []Day {
 
 
 func UpdateGrid(username string, habit string, day string, month string, level string) (User, Habit) {
-	byteArray,err1 := os.ReadFile("/Users/megangenualdi/programming_language_project/project/jsonFiles/main.json")
+	byteArray,err1 := os.ReadFile(FilePath)
 	if err1 != nil {
 		fmt.Println(err1)
 	}
@@ -132,11 +135,8 @@ func UpdateGrid(username string, habit string, day string, month string, level s
 							for l := 0; l < len(user.Habits[j].Grids[k].Days); l++ {
 								if user.Habits[j].Grids[k].Days[l].Number == dayInt {
 									user.Habits[j].Grids[k].Days[l].Completed = true
-									fmt.Println(key.Levels)
-									fmt.Println(levelInt)
 									for m := 0; m < len(key.Levels); m++ {
 										if key.Levels[m].Level == levelInt {
-											fmt.Println(key.Levels[m])
 											user.Habits[j].Grids[k].Days[l].Level = key.Levels[m]
 											currentHabit = user.Habits[j]
 										}
@@ -156,7 +156,7 @@ func UpdateGrid(username string, habit string, day string, month string, level s
 		fmt.Println(err2)
 	}
 
-	err3 := os.WriteFile("/Users/megangenualdi/programming_language_project/project/jsonFiles/main.json", jsonStr, os.ModePerm)
+	err3 := os.WriteFile(FilePath, jsonStr, os.ModePerm)
 	if err3 != nil {
 		fmt.Println(err3)
 	}

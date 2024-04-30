@@ -27,7 +27,7 @@ func CreateUser(username string, password string) string {
 		CreateHabit(keyValues, "Reading", "Read at least 30 minutes per day"),
 	}
 
-	byteArray,err1 := os.ReadFile("/Users/megangenualdi/programming_language_project/project/jsonFiles/main.json")
+	byteArray,err1 := os.ReadFile(FilePath)
 	if err1 != nil {
 		fmt.Println(err1)
 	}
@@ -57,7 +57,7 @@ func CreateUser(username string, password string) string {
 			fmt.Println(err2)
 		}
 
-		err3 := os.WriteFile("/Users/megangenualdi/programming_language_project/project/jsonFiles/main.json", jsonStr, os.ModePerm)
+		err3 := os.WriteFile(FilePath, jsonStr, os.ModePerm)
 		if err3 != nil {
 			fmt.Println(err3)
 	}	
@@ -67,7 +67,7 @@ func CreateUser(username string, password string) string {
 
 
 func AddHabit(username string, habit Habit) User {
-	byteArray,err1 := os.ReadFile("/Users/megangenualdi/programming_language_project/project/jsonFiles/main.json")
+	byteArray,err1 := os.ReadFile(FilePath)
 	if err1 != nil {
 		fmt.Println(err1)
 	}
@@ -93,7 +93,7 @@ func AddHabit(username string, habit Habit) User {
 		fmt.Println(err2)
 	}
 
-	err3 := os.WriteFile("/Users/megangenualdi/programming_language_project/project/jsonFiles/main.json", jsonStr, os.ModePerm)
+	err3 := os.WriteFile(FilePath, jsonStr, os.ModePerm)
 	if err3 != nil {
 		fmt.Println(err3)
 	}
@@ -103,7 +103,7 @@ func AddHabit(username string, habit Habit) User {
 }
 
 func GetUser(username string) User {
-	byteArray,err1 := os.ReadFile("/Users/megangenualdi/programming_language_project/project/jsonFiles/main.json")
+	byteArray,err1 := os.ReadFile(FilePath)
 	if err1 != nil {
 		fmt.Println(err1)
 	}
