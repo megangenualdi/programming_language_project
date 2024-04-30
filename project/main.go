@@ -112,10 +112,10 @@ func updateDay(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 				return
 		}
-		habit := r.Form.Get("habit")
-		day := r.Form.Get("day")
-		month := r.Form.Get("month")
-		level := r.Form.Get("level")
+		habit := strings.TrimSpace(r.Form.Get("habit"))
+		day := strings.TrimSpace(r.Form.Get("day"))
+		month := strings.TrimSpace(r.Form.Get("month"))
+		level := strings.TrimSpace(r.Form.Get("level"))
 		if (level == "") {
 			return
 		}
@@ -138,14 +138,14 @@ func createHabit(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 				return
 		}
-		name := r.Form.Get("name")
-		goal := r.Form.Get("goal")
+		name := strings.TrimSpace(r.Form.Get("name"))
+		goal := strings.TrimSpace(r.Form.Get("goal"))
 		username := instance.LoggedIn.Username
 	  keyValues := map[string]map[string]string{
-			"1": {"color": r.Form.Get("hexCode1"), "text": parseFormValue(r.Form.Get("level1"), "1")},
-			"2": {"color": r.Form.Get("hexCode2"), "text": parseFormValue(r.Form.Get("level2"), "2")},
-			"3": {"color": r.Form.Get("hexCode3"), "text": parseFormValue(r.Form.Get("level3"), "3")},
-			"4": {"color": r.Form.Get("hexCode4"), "text": parseFormValue(r.Form.Get("level4"), "4")},
+			"1": {"color": strings.TrimSpace(r.Form.Get("hexCode1")), "text": parseFormValue(r.Form.Get("level1"), "1")},
+			"2": {"color": strings.TrimSpace(r.Form.Get("hexCode2")), "text": parseFormValue(r.Form.Get("level2"), "2")},
+			"3": {"color": strings.TrimSpace(r.Form.Get("hexCode3")), "text": parseFormValue(r.Form.Get("level3"), "3")},
+			"4": {"color": strings.TrimSpace(r.Form.Get("hexCode4")), "text": parseFormValue(r.Form.Get("level4"), "4")},
 		}
 		habit := structs.CreateHabit(keyValues, name, goal)
 		user := structs.AddHabit(username, habit)
@@ -159,10 +159,10 @@ func createHabit(w http.ResponseWriter, r *http.Request) {
 
 
 func parseFormValue(value string, defaultValue string) string {
-	if (value == "") {
+	if (strings.TrimSpace(value) == "") {
 		return defaultValue
 	} else {
-		return value
+		return strings.TrimSpace(value)
 	}
 }
 
